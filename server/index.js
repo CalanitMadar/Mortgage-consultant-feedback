@@ -4,7 +4,9 @@ const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: '*' // מאפשר לכל המקורות
+  }));
 app.use(express.json());
 
 const supabaseUrl = process.env.SUPABASE_URL;
