@@ -19,7 +19,7 @@ function App() {
     }
 
     try {
-      await axios.post('https://feedbackserver-eight.vercel.app/api/feedback', {
+      await axios.post('https://server-feedback.vercel.app/api/feedback', {
         rating,
         feedback,
       });
