@@ -4,9 +4,16 @@ const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
+const allowedOrigins = [
+  'http://localhost:3000', // אם אתה מפתח מקומית
+  'https://mortgage-consultant-feedback.vercel.app' // הכתובת של הלקוח
+];
+
 app.use(cors({
-    origin: '*' // מאפשר לכל המקורות
-  }));
+  origin: allowedOrigins,
+}));
+
+
 app.use(express.json());
 
 const supabaseUrl = process.env.SUPABASE_URL;
