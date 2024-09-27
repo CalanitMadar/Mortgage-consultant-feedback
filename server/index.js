@@ -8,7 +8,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:3000', // עבור הפיתוח המקומי
-  'https://mortgage-consultant-feedback.vercel.app/' // הכתובת של הלקוח
+  'https://feedback-server-gray.vercel.app'
 ];
 
 // הגדר את CORS עם הרשאות ספציפיות
