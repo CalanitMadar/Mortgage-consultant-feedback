@@ -4,14 +4,19 @@ const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
+
 const allowedOrigins = [
-  'http://localhost:3000', // אם אתה מפתח מקומית
+  'http://localhost:3000', // עבור הפיתוח המקומי
   'https://mortgage-consultant-feedback.vercel.app' // הכתובת של הלקוח
 ];
 
+// הגדר את CORS עם הרשאות ספציפיות
 app.use(cors({
   origin: allowedOrigins,
+  methods: ['GET', 'POST'], // התאם את השיטות שאתה משתמש בהן
+  credentials: true // אם אתה זקוק לתמיכה בעוגיות
 }));
+
 
 
 app.use(express.json());
