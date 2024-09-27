@@ -17,6 +17,7 @@ app.use(cors({
   credentials: true // אם אתה זקוק לתמיכה בעוגיות
 }));
 
+app.options('/api/feedback', cors()); // תאפשר בדיקות Preflight
 
 
 app.use(express.json());
