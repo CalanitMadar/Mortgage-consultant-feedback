@@ -108,6 +108,12 @@ app.post('/api/feedback', async (req, res) => {
   }
 });
 
+
+app.get('/', (req, res) => {
+  res.send('Welcome to the Feedback Server');
+});
+
+
 // בדיקת בריאות עבור Vercel
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK' });
