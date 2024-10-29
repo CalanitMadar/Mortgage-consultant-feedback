@@ -1,31 +1,25 @@
+/* עיצוב כללי של ה-HTML */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #1b1b1b;
+  direction: rtl;
+
+}
+
+/* עיצוב ה-App */
 .App {
   text-align: center;
+  color: #282c34;
+  direction: rtl;
+
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
+  animation: App-logo-spin infinite 20s linear;
 }
 
 @keyframes App-logo-spin {
@@ -34,5 +28,230 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* עיצוב עבור הכותרת */
+.header {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.header img {
+  margin: 0 auto;
+  height: 100px;
+  animation: pulse 1.5s infinite;
+}
+
+.header h1, .header h2 {
+  color: #d6b884;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.header h2 {
+  font-size: 1.5rem;
+  color: #d6b884;
+}
+
+/* עיצוב הטופס */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 2px solid #d6b884;
+  transition: transform 0.3s;
+  
+}
+
+.form-container:hover {
+  transform: scale(1.03);
+}
+
+.form-group label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 90%;
+  padding: 12px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #d6b884;
+}
+
+.form-group .stars {
+  display: flex;
+  justify-content: center;
+}
+
+/* עיצוב הכפתור */
+.submit-button {
+  background-color: #d6b884;
+  color: #fff;
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #c5a873;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.message {
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.message.success {
+  color: #4caf50;
+  background: #e8f5e9;
+}
+
+.message.error {
+  color: #f44336;
+  background: #ffebee;
+}
+
+
+/* עטיפת תיבת הטקסט */
+.textarea-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  padding-left: 40px; /* מרווח בשביל כפתור האימוג'י */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.emoji-button {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* בורר האימוג'ים */
+.emoji-picker {
+  position: absolute;
+  top: 100%; /* מיקום מתחת לתיבת הטקסט */
+  right: 0;
+  left: 0; /* משתרע על כל הרוחב במובייל */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 12px;
+  z-index: 1000;
+  margin-top: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.emoji-category {
+  margin-bottom: 16px;
+}
+
+.emoji-category:last-child {
+  margin-bottom: 0;
+}
+
+.emoji-category-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+}
+
+.emoji-item {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* רספונסיביות */
+@media screen and (max-width: 768px) {
+  .emoji-picker {
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    max-height: 50vh; /* גובה מקסימלי במובייל */
+    border-bottom: none;
+  }
+
+  .emoji-grid {
+    grid-template-columns: repeat(6, 1fr); /* פחות עמודות במובייל */
+  }
+
+  .emoji-item {
+    padding: 12px; /* כפתורים גדולים יותר למובייל */
+    font-size: 24px;
   }
 }

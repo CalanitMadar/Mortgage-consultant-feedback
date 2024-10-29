@@ -1,125 +1,196 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ReactStars from 'react-rating-stars-component';
+import { Loader2, Smile } from 'lucide-react';
+import './App.css';
+
+const EMOJI_LIST = {
+  "סמיילים": ["😊", "😃", "😄", "😁", "😅", "😂", "🤣", "😉"],
+  "לבבות": ["❤️", "💕", "💖", "💗", "💓", "💞", "💘", "💝"],
+  "אגודלים": ["👍", "👎", "👌", "✌️", "🤝", "👏", "🙌", "✋"],
+  "כללי": ["⭐", "✨", "🌟", "💫", "🔥", "💯", "💪", "🎉"]
+};
 
 function App() {
+  const [name, setName] = useState('');
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const textareaRef = useRef(null);
+  const emojiPickerRef = useRef(null);
+
+  // סגירת בורר האימוג'ים בלחיצה מחוץ לאזור
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target) &&
+          !event.target.closest('.emoji-button')) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleRatingChange = (newRating) => {
     setRating(newRating);
   };
 
+  const insertEmoji = (emoji) => {
+    const start = textareaRef.current.selectionStart;
+    const end = textareaRef.current.selectionEnd;
+    const text = feedback;
+    const before = text.substring(0, start);
+    const after = text.substring(end);
+    const newText = before + emoji + after;
+    
+    setFeedback(newText);
+    
+    // החזרת הפוקוס והצבת הסמן אחרי האימוג'י
+    setTimeout(() => {
+      textareaRef.current.focus();
+      const newPosition = start + emoji.length;
+      textareaRef.current.setSelectionRange(newPosition, newPosition);
+    }, 0);
+  };
+
+  const toggleEmojiPicker = (e) => {
+    e.preventDefault(); // מניעת סגירה מיידית של החלון
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (rating === 0 || feedback.trim() === '') {
+    if (!name.trim() || rating === 0 || feedback.trim() === '') {
       setMessage('אנא מלאי את כל השדות.');
       return;
     }
 
+    setIsLoading(true);
     try {
-      await axios.post('https://feedback-server-gray.vercel.app/api/feedback', {
-        rating,
-        feedback,
-      });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/feedback`, { name, rating, feedback });
       setMessage('תודה על חוות הדעת!');
+      setName('');
       setRating(0);
       setFeedback('');
+      setIsSubmitted(true);
     } catch (error) {
       console.error('Error inserting feedback:', error);
       setMessage('שגיאה בשליחת חוות הדעת.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  if (isSubmitted) {
+    return (
+      <div className="App">
+        <div className="form-container">
+          <h2 className="message success">!תודה רבה</h2>
+          <p>חוות הדעת שלך התקבלה בהצלחה</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div
-      style={{
-        maxWidth: '700px',
-        margin: '0 auto',
-        padding: '30px',
-        direction: 'rtl',
-        border: '1px solid #ddd',
-        boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.2)',
-        borderRadius: '12px',
-        backgroundColor: '#ffffff',
-        fontFamily: 'Arial, sans-serif',
-      }}
-    >
-      <h2 style={{ textAlign: 'center', color: '#333', marginBottom: '20px' }}>
-        חוות דעת על יועץ המשכנתאות עמיחי מדר
-      </h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '16px' }}>
-            איך היית מדרגת את חוויית הליווי שלך?
-          </label>
+    <div className="App">
+      <div className="header">
+        <img src="/logo.png" alt="Logo" />
+        <h1>חוות דעת על יועץ המשכנתאות</h1>
+        <h2>עמיחי מדר</h2>
+      </div>
 
-          <ReactStars
-            count={5}
-            onChange={handleRatingChange}
-            size={50}
-            activeColor="#ffd700"
-            value={rating || 0} // להוסיף את הערך ברירת המחדל
+      <form onSubmit={handleSubmit} className="form-container">
+        <div className="form-group">
+          <label>שם מלא:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="הכניסי את שמך המלא"
           />
+        </div>
 
+        <div className="form-group">
+          <label>איך היית מדרגת את חוויית הליווי שלך?</label>
+          <div className="stars">
+            <ReactStars
+              count={5}
+              onChange={handleRatingChange}
+              size={40}
+              activeColor="#d6b884"
+              value={rating || 0}
+            />
+          </div>
         </div>
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', fontSize: '16px' }}>
-            ספרי לנו על חוויית הליווי שלך:
-          </label>
-          <textarea
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-            rows="6"
-            style={{
-              width: '100%',
-              padding: '12px',
-              border: '1px solid #ddd',
-              borderRadius: '6px',
-              fontSize: '16px',
-              resize: 'vertical',
-              lineHeight: '1.5',
-            }}
-            placeholder="תוכלי לספר איך עמיחי מדר עזר לך בתהליך?"
-          ></textarea>
+
+        <div className="form-group">
+          <label>ספרי לנו על חוויית הליווי שלך:</label>
+          <div className="textarea-wrapper">
+            <textarea
+              ref={textareaRef}
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              rows="5"
+              placeholder="שתפי אותנו בחוויה שלך..."
+            />
+            <button
+              type="button"
+              className="emoji-button"
+              onClick={toggleEmojiPicker}
+              aria-label="בחירת אימוג'י"
+            >
+              <Smile size={20} />
+            </button>
+            
+            {showEmojiPicker && (
+              <div className="emoji-picker" ref={emojiPickerRef}>
+                {Object.entries(EMOJI_LIST).map(([category, emojis]) => (
+                  <div key={category} className="emoji-category">
+                    <div className="emoji-category-title">{category}</div>
+                    <div className="emoji-grid">
+                      {emojis.map((emoji) => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          className="emoji-item"
+                          onClick={() => {
+                            insertEmoji(emoji);
+                            setShowEmojiPicker(false);
+                          }}
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <button
-          type="submit"
-          style={{
-            display: 'block',
-            width: '100%',
-            padding: '12px',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            transition: 'background-color 0.3s',
-          }}
-          onMouseOver={(e) => (e.target.style.backgroundColor = '#45a049')}
-          onMouseOut={(e) => (e.target.style.backgroundColor = '#4CAF50')}
-        >
-          שלחי חוות דעת
+
+        <button type="submit" disabled={isLoading} className="submit-button">
+          {isLoading ? (
+            <div className="flex items-center gap-4">
+              <Loader2 className="animate-spin h-5 w-5" />
+              <span>שולח את חוות הדעת...</span>
+            </div>
+          ) : (
+            'שליחת חוות דעת'
+          )}
         </button>
+
+        {message && (
+          <div className={`message ${message.includes('שגיאה') ? 'error' : 'success'}`}>
+            {message}
+          </div>
+        )}
       </form>
-      {message && (
-        <p
-          style={{
-            marginTop: '20px',
-            padding: '10px',
-            color: message.includes('שגיאה') ? 'red' : 'green',
-            backgroundColor: message.includes('שגיאה') ? '#ffe6e6' : '#e6ffe6',
-            textAlign: 'center',
-            fontWeight: 'bold',
-            borderRadius: '6px',
-          }}
-        >
-          {message}
-        </p>
-      )}
     </div>
   );
 }
