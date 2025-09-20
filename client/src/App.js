@@ -111,7 +111,7 @@ function App() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="הכניס את שמך המלא"
+            placeholder="הכנס את שמך המלא"
           />
         </div>
 
