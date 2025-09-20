@@ -111,12 +111,12 @@ function App() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="הכניסי את שמך המלא"
+            placeholder="הכניס את שמך המלא"
           />
         </div>
 
         <div className="form-group">
-          <label>איך היית מדרגת את חוויית הליווי שלך?</label>
+          <label>איך היית מדרג את חוויית הליווי שלך?</label>
           <div className="stars">
             <ReactStars
               count={5}
@@ -129,14 +129,14 @@ function App() {
         </div>
 
         <div className="form-group">
-          <label>ספרי לנו על חוויית הליווי שלך:</label>
+          <label>ספר לנו על חוויית הליווי שלך:</label>
           <div className="textarea-wrapper">
             <textarea
               ref={textareaRef}
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               rows="5"
-              placeholder="שתפי אותנו בחוויה שלך..."
+              placeholder="שתף אותנו בחוויה שלך..."
             />
             <button
               type="button"
